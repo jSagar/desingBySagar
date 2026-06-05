@@ -134,7 +134,7 @@
     <a href="#plan-trip" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Plan Trip</a>
     <a href="#culture" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Culture</a>
     <a href="#contact" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Contact</a>
-    <a href="#plan-trip" class="mt-4 bg-saffron text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-saffron-dark transition-all">Enquire Now</a>
+    <a href="#plan-trip" class="mobile-nav-link mt-4 bg-saffron text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-saffron-dark transition-all">Enquire Now</a>
   </div>
 </div>
 
@@ -1067,6 +1067,8 @@
       navSubText.classList.remove('text-white/70');
       navSubText.classList.add('text-gray-500');
       navLinks.forEach(l => { l.classList.remove('text-white/90'); l.classList.add('text-navy'); });
+      hamburger.classList.remove('text-white');
+      hamburger.classList.add('text-navy');
     } else {
       navbar.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-lg', 'py-3');
       navbar.classList.add('py-4');
@@ -1075,6 +1077,8 @@
       navSubText.classList.add('text-white/70');
       navSubText.classList.remove('text-gray-500');
       navLinks.forEach(l => { l.classList.add('text-white/90'); l.classList.remove('text-navy'); });
+      hamburger.classList.add('text-white');
+      hamburger.classList.remove('text-navy');
     }
   });
 

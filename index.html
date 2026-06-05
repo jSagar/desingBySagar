@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bharat Darshan — Discover the Soul of India</title>
+  <meta name="description" content="Explore India's rich heritage, vibrant culture, and breathtaking destinations with Bharat Darshan." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            saffron: '#FF9933',
+            'saffron-dark': '#e6851a',
+            green: { india: '#138808' },
+            navy: '#000080',
+            gold: '#D4AF37',
+            sand: '#F5F5DC',
+          },
+          fontFamily: {
+            playfair: ['"Playfair Display"', 'serif'],
+            poppins: ['Poppins', 'sans-serif'],
+          },
+          keyframes: {
+            fadeInUp: { '0%': { opacity: '0', transform: 'translateY(40px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideDown: { '0%': { opacity: '0', transform: 'translateY(-20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            pulse: { '0%,100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.05)' } },
+            scrollBounce: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(8px)' } },
+          },
+          animation: {
+            fadeInUp: 'fadeInUp 0.7s ease forwards',
+            fadeIn: 'fadeIn 0.5s ease forwards',
+            slideDown: 'slideDown 0.4s ease forwards',
+            scrollBounce: 'scrollBounce 1.5s infinite',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; color: #1A1A1A; background: #fff; }
+    .font-playfair { font-family: 'Playfair Display', serif; }
+    .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; }
+    .hero-slide.active { opacity: 1; }
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .dest-card { display: none; }
+    .dest-card.show { display: block; }
+    .modal-overlay { display: none; }
+    .modal-overlay.open { display: flex; }
+    /* Scrollbar styling */
+    .scroll-x::-webkit-scrollbar { height: 4px; }
+    .scroll-x::-webkit-scrollbar-track { background: #f1f1f1; }
+    .scroll-x::-webkit-scrollbar-thumb { background: #FF9933; border-radius: 2px; }
+    /* State map hover */
+    .state-path { transition: fill 0.2s ease, filter 0.2s ease; cursor: pointer; }
+    .state-path:hover { filter: brightness(0.85) saturate(1.5); }
+    .state-path.active-state { fill: #FF9933 !important; }
+    /* Carousel dots */
+    .dot { transition: all 0.3s ease; }
+    .dot.active { background: #FF9933; transform: scale(1.3); }
+    /* Toast */
+    #toast { transition: all 0.4s ease; }
+    /* Prevent scroll when mobile menu open */
+    body.menu-open { overflow: hidden; }
+    /* Hero search styling */
+    .hero-search input:focus { outline: 2px solid #FF9933; }
+    /* Lazy load placeholder */
+    img[loading="lazy"] { background: #f0ece3; }
+  </style>
+</head>
+<body class="font-poppins">
+
+<!-- ============================================================ -->
+<!-- NAVBAR -->
+<!-- ============================================================ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4">
+  <div class="container mx-auto px-4 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2 group">
+      <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: linear-gradient(135deg,#FF9933 33%,#fff 33% 66%,#138808 66%);">
+        <span class="text-xs font-bold text-navy">🇮🇳</span>
+      </div>
+      <div>
+        <span class="font-playfair font-bold text-xl text-white nav-logo-text transition-colors duration-300">Bharat Darshan</span>
+        <p class="text-xs text-white/70 nav-sub-text transition-colors duration-300 leading-none">अतिथि देवो भवः</p>
+      </div>
+    </a>
+
+    <!-- Desktop Links -->
+    <div class="hidden lg:flex items-center gap-8">
+      <a href="#destinations" class="nav-link text-white/90 hover:text-saffron font-medium transition-colors duration-200 text-sm">Destinations</a>
+      <a href="#experiences" class="nav-link text-white/90 hover:text-saffron font-medium transition-colors duration-200 text-sm">Experiences</a>
+      <a href="#plan-trip" class="nav-link text-white/90 hover:text-saffron font-medium transition-colors duration-200 text-sm">Plan Trip</a>
+      <a href="#culture" class="nav-link text-white/90 hover:text-saffron font-medium transition-colors duration-200 text-sm">Culture</a>
+      <a href="#contact" class="nav-link text-white/90 hover:text-saffron font-medium transition-colors duration-200 text-sm">Contact</a>
+    </div>
+
+    <!-- CTA + Hamburger -->
+    <div class="flex items-center gap-3">
+      <a href="#plan-trip" class="hidden sm:inline-flex items-center gap-2 bg-saffron text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-saffron-dark transition-all duration-200 shadow-lg">
+        Enquire Now
+      </a>
+      <button id="hamburger" class="lg:hidden p-2 rounded-lg text-white" aria-label="Open menu">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="fixed inset-0 z-40 bg-navy flex-col items-center justify-center hidden">
+  <button id="close-menu" class="absolute top-5 right-5 text-white p-2" aria-label="Close menu">
+    <i data-lucide="x" class="w-7 h-7"></i>
+  </button>
+  <div class="flex flex-col items-center gap-8 text-center">
+    <a href="#destinations" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Destinations</a>
+    <a href="#experiences" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Experiences</a>
+    <a href="#plan-trip" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Plan Trip</a>
+    <a href="#culture" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Culture</a>
+    <a href="#contact" class="mobile-nav-link font-playfair text-3xl text-white hover:text-saffron transition-colors">Contact</a>
+    <a href="#plan-trip" class="mt-4 bg-saffron text-white px-10 py-4 rounded-full text-lg font-semibold hover:bg-saffron-dark transition-all">Enquire Now</a>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================================ -->
+<section id="hero" class="relative h-screen min-h-[600px] overflow-hidden">
+  <!-- Slides -->
+  <div class="hero-slide active" style="position:absolute;inset:0;">
+    <img src="https://source.unsplash.com/1920x1080/?taj-mahal,india" alt="Taj Mahal, Agra" loading="eager" class="w-full h-full object-cover" />
+  </div>
+  <div class="hero-slide" style="position:absolute;inset:0;">
+    <img src="https://source.unsplash.com/1920x1080/?kerala,backwaters" alt="Kerala Backwaters" loading="lazy" class="w-full h-full object-cover" />
+  </div>
+  <div class="hero-slide" style="position:absolute;inset:0;">
+    <img src="https://source.unsplash.com/1920x1080/?himalayas,mountains,india" alt="Himalayan Peaks" loading="lazy" class="w-full h-full object-cover" />
+  </div>
+  <div class="hero-slide" style="position:absolute;inset:0;">
+    <img src="https://source.unsplash.com/1920x1080/?thar-desert,rajasthan" alt="Thar Desert, Rajasthan" loading="lazy" class="w-full h-full object-cover" />
+  </div>
+
+  <!-- Gradient Overlay -->
+  <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.7) 100%);"></div>
+
+  <!-- Slide Indicators -->
+  <div class="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    <button class="hero-dot w-2 h-2 rounded-full bg-white/50 transition-all duration-300 active-dot" data-slide="0" aria-label="Slide 1"></button>
+    <button class="hero-dot w-2 h-2 rounded-full bg-white/50 transition-all duration-300" data-slide="1" aria-label="Slide 2"></button>
+    <button class="hero-dot w-2 h-2 rounded-full bg-white/50 transition-all duration-300" data-slide="2" aria-label="Slide 3"></button>
+    <button class="hero-dot w-2 h-2 rounded-full bg-white/50 transition-all duration-300" data-slide="3" aria-label="Slide 4"></button>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
+    <span class="inline-block bg-saffron/20 border border-saffron/40 text-saffron px-4 py-1.5 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
+      🏛️ Incredible India — Official Tourism Portal
+    </span>
+    <h1 class="font-playfair font-black text-white text-5xl md:text-7xl lg:text-8xl mb-4 leading-tight max-w-5xl">
+      Discover the<br /><span style="color:#FF9933;">Soul of India</span>
+    </h1>
+    <p class="text-white/80 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
+      From Himalayan peaks to Kerala backwaters — 5000 years of stories await
+    </p>
+
+    <!-- Search Bar -->
+    <div class="hero-search w-full max-w-2xl bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row gap-2">
+      <div class="flex-1 flex items-center gap-3 px-4 py-2">
+        <i data-lucide="map-pin" class="w-5 h-5 text-saffron flex-shrink-0"></i>
+        <input type="text" placeholder="Where do you want to go?" class="w-full text-gray-700 text-sm outline-none bg-transparent placeholder-gray-400 font-poppins" aria-label="Destination search" />
+      </div>
+      <div class="sm:border-l border-gray-200 flex items-center gap-3 px-4 py-2">
+        <i data-lucide="calendar" class="w-5 h-5 text-saffron flex-shrink-0"></i>
+        <input type="date" class="text-gray-700 text-sm outline-none bg-transparent font-poppins" aria-label="Travel date" />
+      </div>
+      <a href="#destinations" class="bg-saffron text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-saffron-dark transition-all duration-200 flex items-center gap-2 justify-center">
+        <i data-lucide="search" class="w-4 h-4"></i> Explore
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1">
+    <span class="text-white/60 text-xs uppercase tracking-widest">Scroll</span>
+    <div class="animate-scrollBounce">
+      <i data-lucide="chevron-down" class="w-6 h-6 text-white/60"></i>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- TOP DESTINATIONS -->
+<!-- ============================================================ -->
+<section id="destinations" class="py-24 bg-sand/40">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <span class="text-saffron font-semibold uppercase tracking-widest text-sm">Our Destinations</span>
+      <h2 class="font-playfair font-bold text-4xl md:text-5xl text-navy mt-2 mb-4">Explore Incredible India</h2>
+      <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
+        Each destination a world unto itself — palaces, peaks, backwaters, and beyond.
+      </p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="flex flex-wrap justify-center gap-3 mb-10 reveal">
+      <button class="filter-btn active-filter bg-saffron text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200" data-filter="all">All India</button>
+      <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full text-sm font-semibold hover:border-saffron hover:text-saffron transition-all duration-200" data-filter="north">North</button>
+      <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full text-sm font-semibold hover:border-saffron hover:text-saffron transition-all duration-200" data-filter="south">South</button>
+      <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full text-sm font-semibold hover:border-saffron hover:text-saffron transition-all duration-200" data-filter="east">East</button>
+      <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full text-sm font-semibold hover:border-saffron hover:text-saffron transition-all duration-200" data-filter="west">West</button>
+      <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-6 py-2.5 rounded-full text-sm font-semibold hover:border-saffron hover:text-saffron transition-all duration-200" data-filter="northeast">Northeast</button>
+    </div>
+
+    <!-- Destination Cards Grid -->
+    <div id="dest-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Rajasthan -->
+      <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="north" data-dest="rajasthan" role="button" tabindex="0" aria-label="Explore Rajasthan">
+        <div class="relative overflow-hidden h-64">
+          <img src="https://source.unsplash.com/800x600/?rajasthan,palace" alt="Rajasthan Palace" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div class="absolute top-4 left-4 bg-saffron text-white text-xs font-semibold px-3 py-1 rounded-full">North India</div>
+          <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.9
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-playfair font-bold text-xl text-navy mb-1">Rajasthan</h3>
+          <p class="text-saffron text-xs font-semibold uppercase tracking-wider mb-2">Land of Kings</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Majestic forts, royal palaces, golden deserts, and living heritage in Jaipur, Udaipur & Jaisalmer.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Oct – Mar</span>
+            <button class="text-saffron font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Explore <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kerala -->
+      <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="south" data-dest="kerala" role="button" tabindex="0" aria-label="Explore Kerala">
+        <div class="relative overflow-hidden h-64">
+          <img src="https://source.unsplash.com/800x600/?kerala,backwaters" alt="Kerala Backwaters" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div class="absolute top-4 left-4 bg-green-india text-white text-xs font-semibold px-3 py-1 rounded-full">South India</div>
+          <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.8
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-playfair font-bold text-xl text-navy mb-1">Kerala</h3>
+          <p class="text-saffron text-xs font-semibold uppercase tracking-wider mb-2">God's Own Country</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Serene backwaters, misty tea gardens in Munnar, and rejuvenating Ayurvedic traditions.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Sep – Mar</span>
+            <button class="text-saffron font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Explore <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goa -->
+      <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="west" data-dest="goa" role="button" tabindex="0" aria-label="Explore Goa">
+        <div class="relative overflow-hidden h-64">
+          <img src="https://source.unsplash.com/800x600/?goa,beach,india" alt="Goa Beach" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div class="absolute top-4 left-4 bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">West India</div>
+          <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.7
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-playfair font-bold text-xl text-navy mb-1">Goa</h3>
+          <p class="text-saffron text-xs font-semibold uppercase tracking-wider mb-2">Pearl of the Orient</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Sun-kissed beaches, Portuguese cathedrals, vibrant nightlife, and spice-laden cuisine.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Nov – Feb</span>
+            <button class="text-saffron font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Explore <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Himachal Pradesh -->
+      <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="north" data-dest="himachal" role="button" tabindex="0" aria-label="Explore Himachal Pradesh">
+        <div class="relative overflow-hidden h-64">
+          <img src="https://source.unsplash.com/800x600/?himachal,mountains,india" alt="Himachal Pradesh Mountains" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div class="absolute top-4 left-4 bg-saffron text-white text-xs font-semibold px-3 py-1 rounded-full">North India</div>
+          <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.8
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-playfair font-bold text-xl text-navy mb-1">Himachal Pradesh</h3>
+          <p class="text-saffron text-xs font-semibold uppercase tracking-wider mb-2">Dev Bhoomi</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Snow-capped Himalayan valleys, adventure trails in Manali and mystical Spiti Valley.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Mar – Jun, Sep – Nov</span>
+            <button class="text-saffron font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Explore <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Varanasi -->
+      <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="north" data-dest="varanasi" role="button" tabindex="0" aria-label="Explore Varanasi">
+        <div class="relative overflow-hidden h-64">
+          <img src="https://source.unsplash.com/800x600/?varanasi,ganges,india" alt="Varanasi Ghats" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div class="absolute top-4 left-4 bg-saffron text-white text-xs font-semibold px-3 py-1 rounded-full">North India</div>
+          <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.9
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-playfair font-bold text-xl text-navy mb-1">Varanasi</h3>
+          <p class="text-saffron text-xs font-semibold uppercase tracking-wider mb-2">Spiritual Capital</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">One of the world's oldest cities — witness the Ganga Aarti at dusk and sacred Sarnath.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Oct – Feb</span>
+            <button class="text-saffron font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Explore <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Meghalaya -->
+      <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="northeast" data-dest="meghalaya" role="button" tabindex="0" aria-label="Explore Meghalaya">
+        <div class="relative overflow-hidden h-64">
+          <img src="https://source.unsplash.com/800x600/?meghalaya,waterfall,northeast-india" alt="Meghalaya Waterfalls" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <div class="absolute top-4 left-4 bg-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Northeast India</div>
+          <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.7
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="font-playfair font-bold text-xl text-navy mb-1">Meghalaya</h3>
+          <p class="text-saffron text-xs font-semibold uppercase tracking-wider mb-2">Abode of Clouds</p>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Living root bridges, pristine waterfalls, and the wettest place on Earth in all its glory.</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-400 flex items-center gap-1"><i data-lucide="calendar" class="w-3 h-3"></i> Oct – May</span>
+            <button class="text-saffron font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all">Explore <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DESTINATION MODAL -->
+<!-- ============================================================ -->
+<div id="dest-modal" class="modal-overlay fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Destination Details">
+  <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+    <button id="close-modal" class="absolute top-4 right-4 z-10 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors" aria-label="Close modal">
+      <i data-lucide="x" class="w-5 h-5 text-gray-600"></i>
+    </button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- EXPERIENCES -->
+<!-- ============================================================ -->
+<section id="experiences" class="py-24 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <span class="text-saffron font-semibold uppercase tracking-widest text-sm">What Awaits You</span>
+      <h2 class="font-playfair font-bold text-4xl md:text-5xl text-navy mt-2 mb-4">Unforgettable Experiences</h2>
+      <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
+        India offers a spectrum of experiences unlike anywhere else on Earth.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <!-- Spiritual -->
+      <div class="reveal group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-xl">
+        <img src="https://source.unsplash.com/600x800/?varanasi,ganga-aarti" alt="Varanasi Ganga Aarti" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+          <div class="w-12 h-12 bg-saffron/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 border border-saffron/40">
+            <i data-lucide="flame" class="w-6 h-6 text-saffron"></i>
+          </div>
+          <h3 class="font-playfair font-bold text-xl mb-1">Spiritual</h3>
+          <p class="text-sm text-white/80 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Witness the sacred Ganga Aarti at Dashashwamedh Ghat — a thousand-year-old ritual of fire and faith.
+          </p>
+        </div>
+        <div class="absolute top-4 right-4 bg-saffron text-white text-xs font-bold px-3 py-1 rounded-full">Varanasi</div>
+      </div>
+
+      <!-- Adventure -->
+      <div class="reveal group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-xl">
+        <img src="https://source.unsplash.com/600x800/?rishikesh,rafting,india" alt="Rishikesh River Rafting" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+          <div class="w-12 h-12 bg-blue-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 border border-blue-400/40">
+            <i data-lucide="waves" class="w-6 h-6 text-blue-300"></i>
+          </div>
+          <h3 class="font-playfair font-bold text-xl mb-1">Adventure</h3>
+          <p class="text-sm text-white/80 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Ride Grade IV rapids on the holy Ganges through the yoga capital of the world — Rishikesh.
+          </p>
+        </div>
+        <div class="absolute top-4 right-4 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">Rishikesh</div>
+      </div>
+
+      <!-- Wildlife -->
+      <div class="reveal group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-xl">
+        <img src="https://source.unsplash.com/600x800/?tiger,ranthambore,wildlife" alt="Ranthambore Tiger Safari" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+          <div class="w-12 h-12 bg-green-india/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 border border-green-400/40">
+            <i data-lucide="paw-print" class="w-6 h-6 text-green-300"></i>
+          </div>
+          <h3 class="font-playfair font-bold text-xl mb-1">Wildlife</h3>
+          <p class="text-sm text-white/80 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Track the majestic Bengal Tiger through Ranthambore's ancient ruins and dense jungle trails.
+          </p>
+        </div>
+        <div class="absolute top-4 right-4 bg-green-india text-white text-xs font-bold px-3 py-1 rounded-full">Ranthambore</div>
+      </div>
+
+      <!-- Wellness -->
+      <div class="reveal group relative rounded-2xl overflow-hidden h-96 cursor-pointer shadow-xl">
+        <img src="https://source.unsplash.com/600x800/?ayurveda,wellness,kerala" alt="Kerala Ayurveda Wellness" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+          <div class="w-12 h-12 bg-gold/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 border border-gold/40">
+            <i data-lucide="leaf" class="w-6 h-6 text-yellow-300"></i>
+          </div>
+          <h3 class="font-playfair font-bold text-xl mb-1">Wellness</h3>
+          <p class="text-sm text-white/80 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            Restore mind, body, and soul with Kerala's 3,000-year-old Ayurvedic healing traditions.
+          </p>
+        </div>
+        <div class="absolute top-4 right-4 bg-gold text-white text-xs font-bold px-3 py-1 rounded-full">Kerala</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- INTERACTIVE INDIA MAP -->
+<!-- ============================================================ -->
+<section id="india-map" class="py-24 bg-navy relative overflow-hidden">
+  <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center mb-14 reveal">
+      <span class="text-saffron font-semibold uppercase tracking-widest text-sm">Interactive</span>
+      <h2 class="font-playfair font-bold text-4xl md:text-5xl text-white mt-2 mb-4">Explore by Region</h2>
+      <p class="text-white/60 max-w-xl mx-auto text-base leading-relaxed">
+        Hover over a state to discover its gems. Click to explore in detail.
+      </p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row items-center gap-12">
+      <!-- Map SVG -->
+      <div class="w-full lg:w-1/2 reveal relative">
+        <div id="map-tooltip" class="hidden absolute z-20 bg-white rounded-xl shadow-2xl px-4 py-3 text-sm pointer-events-none min-w-48">
+          <p class="font-bold text-navy" id="tooltip-state">State Name</p>
+          <p class="text-gray-500 text-xs" id="tooltip-attr">Top attraction</p>
+        </div>
+        <!-- Simplified India SVG Map -->
+        <svg id="india-svg" viewBox="0 0 550 650" class="w-full max-w-lg mx-auto" role="img" aria-label="Interactive map of India" xmlns="http://www.w3.org/2000/svg">
+          <!-- Kashmir/J&K -->
+          <path class="state-path" data-state="Jammu & Kashmir" data-attr="Dal Lake & Gulmarg" fill="#4A90D9" d="M200,20 L240,15 L280,25 L290,60 L270,80 L240,75 L210,65 L195,45 Z" />
+          <!-- Himachal -->
+          <path class="state-path" data-state="Himachal Pradesh" data-attr="Manali & Spiti Valley" data-dest="himachal" fill="#5BA3E0" d="M240,75 L270,80 L285,95 L275,120 L250,125 L225,115 L215,95 L225,80 Z" />
+          <!-- Punjab -->
+          <path class="state-path" data-state="Punjab" data-attr="Golden Temple, Amritsar" fill="#7DB8E8" d="M195,90 L225,80 L225,115 L210,130 L185,125 L180,105 Z" />
+          <!-- Haryana -->
+          <path class="state-path" data-state="Haryana" data-attr="Kurukshetra & Sultanpur" fill="#6CAADE" d="M210,130 L250,125 L260,150 L240,165 L210,155 L200,140 Z" />
+          <!-- Delhi -->
+          <path class="state-path" data-state="Delhi" data-attr="Red Fort & Qutub Minar" fill="#FF9933" d="M235,148 L248,145 L252,158 L240,162 L232,155 Z" />
+          <!-- Rajasthan -->
+          <path class="state-path" data-state="Rajasthan" data-attr="Jaipur, Udaipur, Jaisalmer" data-dest="rajasthan" fill="#E8A35B" d="M145,125 L200,120 L210,155 L215,200 L200,250 L165,265 L130,255 L110,220 L115,175 L130,150 Z" />
+          <!-- UP -->
+          <path class="state-path" data-state="Uttar Pradesh" data-attr="Taj Mahal, Agra & Varanasi" data-dest="varanasi" fill="#C8A46A" d="M240,162 L290,155 L320,165 L330,195 L315,225 L285,235 L255,230 L230,215 L215,200 L210,165 Z" />
+          <!-- Bihar -->
+          <path class="state-path" data-state="Bihar" data-attr="Bodh Gaya & Nalanda" fill="#D4C17A" d="M320,165 L355,160 L370,185 L360,215 L330,225 L315,225 L320,190 Z" />
+          <!-- West Bengal -->
+          <path class="state-path" data-state="West Bengal" data-attr="Darjeeling & Kolkata" fill="#B5CE7A" d="M370,185 L395,175 L405,200 L400,240 L380,260 L360,255 L355,230 L360,215 Z" />
+          <!-- Jharkhand -->
+          <path class="state-path" data-state="Jharkhand" data-attr="Betla National Park" fill="#A8C270" d="M330,225 L360,215 L355,230 L360,255 L340,265 L315,255 L310,235 Z" />
+          <!-- Odisha -->
+          <path class="state-path" data-state="Odisha" data-attr="Konark Sun Temple" fill="#9CB870" d="M360,255 L380,260 L390,285 L380,315 L355,320 L335,305 L330,275 L340,265 Z" />
+          <!-- MP -->
+          <path class="state-path" data-state="Madhya Pradesh" data-attr="Khajuraho & Kanha Tiger Reserve" fill="#D4A85A" d="M215,200 L255,230 L285,235 L315,255 L330,275 L315,295 L285,300 L250,290 L225,270 L210,250 L200,250 Z" />
+          <!-- Gujarat -->
+          <path class="state-path" data-state="Gujarat" data-attr="Rann of Kutch & Gir Forest" fill="#E8BC6A" d="M120,255 L165,265 L200,250 L210,285 L200,310 L175,330 L145,325 L120,300 L105,275 Z" />
+          <!-- Maharashtra -->
+          <path class="state-path" data-state="Maharashtra" data-attr="Mumbai, Ajanta & Ellora" fill="#C89858" d="M175,330 L200,310 L250,290 L285,300 L295,330 L280,360 L255,375 L225,370 L200,350 L180,360 L170,345 Z" />
+          <!-- Chhattisgarh -->
+          <path class="state-path" data-state="Chhattisgarh" data-attr="Chitrakote Falls & Bastar" fill="#B8AA6A" d="M285,300 L315,295 L335,305 L330,330 L315,360 L295,365 L280,360 L295,330 Z" />
+          <!-- Goa -->
+          <path class="state-path" data-state="Goa" data-attr="Baga Beach & Old Goa Churches" data-dest="goa" fill="#60A8E0" d="M195,375 L210,368 L215,385 L205,395 L192,390 Z" />
+          <!-- Karnataka -->
+          <path class="state-path" data-state="Karnataka" data-attr="Hampi & Coorg" fill="#78B88A" d="M200,350 L225,370 L255,375 L270,400 L260,435 L240,450 L215,445 L198,420 L190,395 L205,375 Z" />
+          <!-- Andhra Pradesh -->
+          <path class="state-path" data-state="Andhra Pradesh" data-attr="Tirupati & Araku Valley" fill="#90C490" d="M260,435 L295,420 L320,435 L315,465 L295,480 L270,470 L260,455 Z" />
+          <!-- Telangana -->
+          <path class="state-path" data-state="Telangana" data-attr="Hyderabad Charminar" fill="#A8D4A0" d="M255,375 L280,360 L315,360 L320,390 L305,415 L295,420 L270,400 Z" />
+          <!-- Kerala -->
+          <path class="state-path" data-state="Kerala" data-attr="Alleppey Backwaters & Munnar" data-dest="kerala" fill="#4CAF6A" d="M215,445 L240,450 L248,475 L240,505 L225,515 L210,500 L205,470 L210,455 Z" />
+          <!-- Tamil Nadu -->
+          <path class="state-path" data-state="Tamil Nadu" data-attr="Madurai Meenakshi Temple" fill="#6ABE80" d="M240,450 L260,455 L295,480 L300,505 L285,525 L265,530 L248,515 L240,505 L248,475 Z" />
+          <!-- Assam -->
+          <path class="state-path" data-state="Assam" data-attr="Kaziranga & Kamakhya Temple" fill="#C0DD90" d="M405,175 L435,170 L445,185 L435,205 L415,215 L400,205 L400,190 Z" />
+          <!-- Meghalaya -->
+          <path class="state-path" data-state="Meghalaya" data-attr="Cherrapunji & Living Root Bridges" data-dest="meghalaya" fill="#A8D070" d="M400,205 L415,215 L410,230 L395,235 L385,225 L390,210 Z" />
+          <!-- Nagaland -->
+          <path class="state-path" data-state="Nagaland" data-attr="Hornbill Festival & Dzükou Valley" fill="#98C860" d="M435,185 L458,182 L465,200 L450,215 L435,205 L445,185 Z" />
+          <!-- Uttarakhand -->
+          <path class="state-path" data-state="Uttarakhand" data-attr="Haridwar, Rishikesh & Valley of Flowers" fill="#8FB8D8" d="M250,95 L285,95 L295,115 L285,135 L265,140 L250,125 Z" />
+          <!-- Lakshadweep label -->
+          <circle cx="195" cy="570" r="3" fill="#60A8E0" />
+          <circle cx="200" cy="580" r="2" fill="#60A8E0" />
+          <circle cx="188" cy="578" r="2" fill="#60A8E0" />
+          <!-- Sri Lanka outline hint -->
+          <ellipse cx="295" cy="555" rx="15" ry="20" fill="none" stroke="#ffffff30" stroke-width="1" />
+        </svg>
+      </div>
+
+      <!-- Map Legend & Info -->
+      <div class="w-full lg:w-1/2 reveal">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition-colors group cursor-pointer map-legend-item" data-dest="rajasthan">
+            <div class="w-10 h-10 bg-saffron/20 rounded-full flex items-center justify-center mb-3">
+              <i data-lucide="castle" class="w-5 h-5 text-saffron"></i>
+            </div>
+            <h4 class="font-playfair font-bold text-white text-lg mb-1">Rajasthan</h4>
+            <p class="text-white/60 text-sm">Land of Kings · 5 UNESCO sites</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition-colors group cursor-pointer map-legend-item" data-dest="kerala">
+            <div class="w-10 h-10 bg-green-india/30 rounded-full flex items-center justify-center mb-3">
+              <i data-lucide="boat" class="w-5 h-5 text-green-300"></i>
+            </div>
+            <h4 class="font-playfair font-bold text-white text-lg mb-1">Kerala</h4>
+            <p class="text-white/60 text-sm">God's Own Country · Backwaters</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition-colors group cursor-pointer map-legend-item" data-dest="himachal">
+            <div class="w-10 h-10 bg-blue-500/30 rounded-full flex items-center justify-center mb-3">
+              <i data-lucide="mountain" class="w-5 h-5 text-blue-300"></i>
+            </div>
+            <h4 class="font-playfair font-bold text-white text-lg mb-1">Himachal</h4>
+            <p class="text-white/60 text-sm">Dev Bhoomi · Himalayan peaks</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition-colors group cursor-pointer map-legend-item" data-dest="meghalaya">
+            <div class="w-10 h-10 bg-purple-500/30 rounded-full flex items-center justify-center mb-3">
+              <i data-lucide="cloud-rain" class="w-5 h-5 text-purple-300"></i>
+            </div>
+            <h4 class="font-playfair font-bold text-white text-lg mb-1">Meghalaya</h4>
+            <p class="text-white/60 text-sm">Abode of Clouds · Root bridges</p>
+          </div>
+        </div>
+
+        <div class="mt-6 bg-saffron/10 border border-saffron/30 rounded-2xl p-5">
+          <p class="text-saffron font-semibold text-sm mb-1">28 States · 8 Union Territories</p>
+          <p class="text-white/70 text-sm">India's diversity spans 3.3 million km² — each region a distinct culture, cuisine, and landscape.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- CULTURE STRIP — FESTIVALS -->
+<!-- ============================================================ -->
+<section id="culture" class="py-24 bg-sand/40 overflow-hidden">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-14 reveal">
+      <span class="text-saffron font-semibold uppercase tracking-widest text-sm">Living Heritage</span>
+      <h2 class="font-playfair font-bold text-4xl md:text-5xl text-navy mt-2 mb-4">Celebrate with India</h2>
+      <p class="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
+        Every month brings a new festival — colour, light, music, and devotion.
+      </p>
+    </div>
+
+    <div class="relative reveal">
+      <div id="festival-track" class="flex gap-6 overflow-x-auto scroll-x pb-4 snap-x snap-mandatory" style="scroll-behavior:smooth;">
+
+        <!-- Diwali -->
+        <div class="festival-card flex-shrink-0 w-72 snap-start rounded-2xl overflow-hidden shadow-xl group cursor-pointer">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://source.unsplash.com/600x400/?diwali,festival,lights" alt="Diwali Festival of Lights" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-saffron text-white text-xs font-bold px-3 py-1 rounded-full">October / November</span>
+          </div>
+          <div class="bg-white p-5">
+            <h3 class="font-playfair font-bold text-lg text-navy mb-1">Diwali</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Festival of Lights. Lakhs of earthen lamps illuminate the night as India celebrates the triumph of light over darkness.</p>
+          </div>
+        </div>
+
+        <!-- Holi -->
+        <div class="festival-card flex-shrink-0 w-72 snap-start rounded-2xl overflow-hidden shadow-xl group cursor-pointer">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://source.unsplash.com/600x400/?holi,festival,colors,india" alt="Holi Festival of Colors" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">February / March</span>
+          </div>
+          <div class="bg-white p-5">
+            <h3 class="font-playfair font-bold text-lg text-navy mb-1">Holi</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Festival of Colours. A riot of gulal powder transforms streets into living rainbows welcoming spring's arrival.</p>
+          </div>
+        </div>
+
+        <!-- Pushkar Fair -->
+        <div class="festival-card flex-shrink-0 w-72 snap-start rounded-2xl overflow-hidden shadow-xl group cursor-pointer">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://source.unsplash.com/600x400/?pushkar,camel,fair,rajasthan" alt="Pushkar Camel Fair" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-saffron text-white text-xs font-bold px-3 py-1 rounded-full">November</span>
+          </div>
+          <div class="bg-white p-5">
+            <h3 class="font-playfair font-bold text-lg text-navy mb-1">Pushkar Fair</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">World's largest camel fair. Thousands of camels, folk artists, and pilgrims converge under Rajasthan's desert sky.</p>
+          </div>
+        </div>
+
+        <!-- Hornbill Festival -->
+        <div class="festival-card flex-shrink-0 w-72 snap-start rounded-2xl overflow-hidden shadow-xl group cursor-pointer">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://source.unsplash.com/600x400/?nagaland,tribal,festival,northeast" alt="Hornbill Festival Nagaland" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">December</span>
+          </div>
+          <div class="bg-white p-5">
+            <h3 class="font-playfair font-bold text-lg text-navy mb-1">Hornbill Festival</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">The Festival of Festivals in Nagaland. Sixteen tribes showcase war dances, crafts, and cuisine in Kisama village.</p>
+          </div>
+        </div>
+
+        <!-- Onam -->
+        <div class="festival-card flex-shrink-0 w-72 snap-start rounded-2xl overflow-hidden shadow-xl group cursor-pointer">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://source.unsplash.com/600x400/?onam,kerala,boat-race" alt="Onam Kerala" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-green-india text-white text-xs font-bold px-3 py-1 rounded-full">August / September</span>
+          </div>
+          <div class="bg-white p-5">
+            <h3 class="font-playfair font-bold text-lg text-navy mb-1">Onam</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Kerala's harvest festival. Floral carpets, Vallam Kali snake boat races, and a 26-course Sadya feast await.</p>
+          </div>
+        </div>
+
+        <!-- Durga Puja -->
+        <div class="festival-card flex-shrink-0 w-72 snap-start rounded-2xl overflow-hidden shadow-xl group cursor-pointer">
+          <div class="relative h-52 overflow-hidden">
+            <img src="https://source.unsplash.com/600x400/?durga-puja,kolkata,festival" alt="Durga Puja Kolkata" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">October</span>
+          </div>
+          <div class="bg-white p-5">
+            <h3 class="font-playfair font-bold text-lg text-navy mb-1">Durga Puja</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Kolkata transforms into an open-air art gallery as pandals showcase stunning handcrafted tableaux of the goddess.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scroll Arrows -->
+      <button id="fest-prev" class="absolute -left-4 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center text-navy hover:text-saffron transition-colors z-10" aria-label="Previous festival">
+        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+      </button>
+      <button id="fest-next" class="absolute -right-4 top-1/2 -translate-y-1/2 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center text-navy hover:text-saffron transition-colors z-10" aria-label="Next festival">
+        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- STATS + TESTIMONIALS -->
+<!-- ============================================================ -->
+<section id="testimonials" class="py-24 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Stats Column -->
+      <div class="reveal">
+        <span class="text-saffron font-semibold uppercase tracking-widest text-sm">Our Impact</span>
+        <h2 class="font-playfair font-bold text-4xl md:text-5xl text-navy mt-2 mb-10">Trusted by Travellers Worldwide</h2>
+
+        <div class="grid grid-cols-2 gap-6">
+          <div class="bg-sand/60 rounded-2xl p-6 text-center">
+            <div class="font-playfair font-black text-4xl text-saffron mb-1">50+</div>
+            <p class="text-gray-600 text-sm font-medium">Destinations Covered</p>
+          </div>
+          <div class="bg-navy/5 rounded-2xl p-6 text-center">
+            <div class="font-playfair font-black text-4xl text-navy mb-1">10K+</div>
+            <p class="text-gray-600 text-sm font-medium">Happy Travellers</p>
+          </div>
+          <div class="bg-green-india/10 rounded-2xl p-6 text-center">
+            <div class="font-playfair font-black text-4xl text-green-india mb-1">4.9★</div>
+            <p class="text-gray-600 text-sm font-medium">Average Rating</p>
+          </div>
+          <div class="bg-gold/10 rounded-2xl p-6 text-center">
+            <div class="font-playfair font-black text-4xl text-gold mb-1">15+</div>
+            <p class="text-gray-600 text-sm font-medium">Years of Experience</p>
+          </div>
+        </div>
+
+        <div class="mt-8 flex items-center gap-4 bg-saffron/10 rounded-2xl p-5">
+          <div class="text-3xl">🏆</div>
+          <div>
+            <p class="font-semibold text-navy text-sm">National Tourism Award Winner</p>
+            <p class="text-gray-500 text-xs">Best Digital Tourism Platform — Ministry of Tourism, India 2025</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonials Carousel -->
+      <div class="reveal">
+        <span class="text-saffron font-semibold uppercase tracking-widest text-sm">Traveller Stories</span>
+        <h3 class="font-playfair font-bold text-3xl text-navy mt-2 mb-8">What They Say</h3>
+
+        <div id="testimonial-wrapper" class="relative overflow-hidden rounded-2xl">
+          <!-- Testimonial 1 -->
+          <div class="testimonial-slide bg-sand/60 rounded-2xl p-8 transition-all duration-500">
+            <div class="flex gap-1 mb-4">
+              <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+              <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+            </div>
+            <blockquote class="font-playfair text-xl text-navy leading-relaxed mb-6 italic">
+              "The Ganga Aarti in Varanasi was the most spiritually moving experience of my life. Bharat Darshan's guidance made it unforgettable."
+            </blockquote>
+            <div class="flex items-center gap-4">
+              <img src="https://source.unsplash.com/100x100/?woman,portrait,germany" alt="Sarah Mueller" loading="lazy" class="w-12 h-12 rounded-full object-cover border-2 border-saffron" />
+              <div>
+                <p class="font-semibold text-navy">Sarah Mueller</p>
+                <p class="text-gray-500 text-sm flex items-center gap-1">🇩🇪 Munich, Germany</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden testimonial data -->
+        <div id="testimonials-data" class="hidden">
+          <div data-rating="5" data-quote="Rajasthan with Bharat Darshan was like stepping into a fairy tale. The heritage walks, camel safaris, and sunset over the dunes — pure magic." data-name="James Whitfield" data-location="🇬🇧 London, United Kingdom" data-img="https://source.unsplash.com/100x100/?man,portrait,uk"></div>
+          <div data-rating="5" data-quote="Kerala's backwaters gave me the peace I was searching for. The Ayurveda retreat was life-changing. Already planning my second India trip!" data-name="Yuki Tanaka" data-location="🇯🇵 Tokyo, Japan" data-img="https://source.unsplash.com/100x100/?woman,portrait,japan"></div>
+          <div data-rating="5" data-quote="The Ganga Aarti in Varanasi was the most spiritually moving experience of my life. Bharat Darshan's guidance made it unforgettable." data-name="Sarah Mueller" data-location="🇩🇪 Munich, Germany" data-img="https://source.unsplash.com/100x100/?woman,portrait,germany"></div>
+        </div>
+
+        <!-- Carousel Controls -->
+        <div class="flex items-center gap-4 mt-6">
+          <button id="test-prev" class="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-saffron hover:text-saffron transition-all" aria-label="Previous testimonial">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          </button>
+          <div class="flex gap-2" id="test-dots"></div>
+          <button id="test-next" class="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center hover:border-saffron hover:text-saffron transition-all" aria-label="Next testimonial">
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PLAN YOUR TRIP CTA + FORM -->
+<!-- ============================================================ -->
+<section id="plan-trip" class="py-24 relative overflow-hidden" style="background: linear-gradient(135deg, #000080 0%, #1a1a6e 50%, #0d0d4d 100%);">
+  <div class="absolute inset-0 opacity-10" style="background-image: url('https://source.unsplash.com/1920x1080/?india,mandala'); background-size: cover; background-position: center;"></div>
+  <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(0,0,128,0.9) 0%, rgba(26,26,110,0.9) 100%);"></div>
+
+  <!-- Decorative circles -->
+  <div class="absolute top-20 right-20 w-64 h-64 rounded-full border border-saffron/20"></div>
+  <div class="absolute bottom-20 left-10 w-48 h-48 rounded-full border border-saffron/10"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-3xl mx-auto text-center mb-14 reveal">
+      <span class="text-saffron font-semibold uppercase tracking-widest text-sm">Expert Planning</span>
+      <h2 class="font-playfair font-bold text-4xl md:text-5xl text-white mt-2 mb-4">
+        Can't decide? Let our experts<br />craft your journey
+      </h2>
+      <p class="text-white/70 text-lg leading-relaxed">
+        Share your dream and our certified travel curators will design a personalised India itinerary — completely free.
+      </p>
+    </div>
+
+    <div class="max-w-2xl mx-auto reveal">
+      <form id="enquiry-form" class="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 space-y-5" novalidate>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="f-name" class="block text-white/80 text-sm mb-2 font-medium">Full Name *</label>
+            <input type="text" id="f-name" name="name" placeholder="Your name" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm outline-none focus:border-saffron transition-colors" />
+            <p class="error-msg text-red-400 text-xs mt-1 hidden"></p>
+          </div>
+          <div>
+            <label for="f-email" class="block text-white/80 text-sm mb-2 font-medium">Email Address *</label>
+            <input type="email" id="f-email" name="email" placeholder="your@email.com" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm outline-none focus:border-saffron transition-colors" />
+            <p class="error-msg text-red-400 text-xs mt-1 hidden"></p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label for="f-phone" class="block text-white/80 text-sm mb-2 font-medium">Phone Number *</label>
+            <input type="tel" id="f-phone" name="phone" placeholder="10-digit number" maxlength="10" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm outline-none focus:border-saffron transition-colors" />
+            <p class="error-msg text-red-400 text-xs mt-1 hidden"></p>
+          </div>
+          <div>
+            <label for="f-date" class="block text-white/80 text-sm mb-2 font-medium">Travel Date</label>
+            <input type="date" id="f-date" name="date" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 text-sm outline-none focus:border-saffron transition-colors" style="color-scheme: dark;" />
+          </div>
+        </div>
+
+        <div>
+          <label for="f-interest" class="block text-white/80 text-sm mb-2 font-medium">Interested In</label>
+          <select id="f-interest" name="interest" class="w-full bg-navy border border-white/20 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-saffron transition-colors">
+            <option value="">Select an experience...</option>
+            <option value="heritage">Heritage & Culture</option>
+            <option value="adventure">Adventure & Trekking</option>
+            <option value="wildlife">Wildlife Safari</option>
+            <option value="wellness">Wellness & Ayurveda</option>
+            <option value="pilgrimage">Spiritual & Pilgrimage</option>
+            <option value="honeymoon">Honeymoon Special</option>
+            <option value="family">Family Holiday</option>
+            <option value="custom">Custom Itinerary</option>
+          </select>
+        </div>
+
+        <button type="submit" id="form-submit" class="w-full bg-saffron text-white font-semibold text-base py-4 rounded-xl hover:bg-saffron-dark transition-all duration-200 flex items-center justify-center gap-2 group">
+          <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+          Plan My Dream Trip
+        </button>
+
+        <p class="text-white/40 text-xs text-center">🔒 Your data is safe. We'll contact you within 24 hours.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-6 right-6 z-50 bg-green-india text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 translate-y-24 opacity-0 pointer-events-none max-w-sm">
+  <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+    <i data-lucide="check" class="w-4 h-4"></i>
+  </div>
+  <div>
+    <p class="font-semibold text-sm">Request Received!</p>
+    <p class="text-white/80 text-xs">We'll contact you within 24 hours.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FOOTER -->
+<!-- ============================================================ -->
+<footer id="contact" class="bg-navy text-white">
+  <div class="container mx-auto px-4 pt-16 pb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+      <!-- About -->
+      <div>
+        <div class="flex items-center gap-2 mb-5">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm" style="background: linear-gradient(135deg,#FF9933 33%,#fff 33% 66%,#138808 66%);">🇮🇳</div>
+          <span class="font-playfair font-bold text-xl">Bharat Darshan</span>
+        </div>
+        <p class="text-white/60 text-sm leading-relaxed mb-5">
+          India's premier digital tourism platform curating authentic, responsible travel experiences across every corner of the subcontinent.
+        </p>
+        <div class="flex gap-3">
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-saffron rounded-full flex items-center justify-center transition-colors" aria-label="Facebook">
+            <i data-lucide="facebook" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-saffron rounded-full flex items-center justify-center transition-colors" aria-label="Instagram">
+            <i data-lucide="instagram" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-saffron rounded-full flex items-center justify-center transition-colors" aria-label="YouTube">
+            <i data-lucide="youtube" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-saffron rounded-full flex items-center justify-center transition-colors" aria-label="Twitter / X">
+            <i data-lucide="twitter" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-playfair font-bold text-lg mb-5">Quick Links</h4>
+        <ul class="space-y-3 text-sm text-white/60">
+          <li><a href="#destinations" class="hover:text-saffron transition-colors flex items-center gap-2"><i data-lucide="arrow-right" class="w-3 h-3"></i>Destinations</a></li>
+          <li><a href="#experiences" class="hover:text-saffron transition-colors flex items-center gap-2"><i data-lucide="arrow-right" class="w-3 h-3"></i>Experiences</a></li>
+          <li><a href="#culture" class="hover:text-saffron transition-colors flex items-center gap-2"><i data-lucide="arrow-right" class="w-3 h-3"></i>Festivals</a></li>
+          <li><a href="#plan-trip" class="hover:text-saffron transition-colors flex items-center gap-2"><i data-lucide="arrow-right" class="w-3 h-3"></i>Plan Your Trip</a></li>
+          <li><a href="#india-map" class="hover:text-saffron transition-colors flex items-center gap-2"><i data-lucide="arrow-right" class="w-3 h-3"></i>Explore Map</a></li>
+          <li><a href="#" class="hover:text-saffron transition-colors flex items-center gap-2"><i data-lucide="arrow-right" class="w-3 h-3"></i>Travel Blog</a></li>
+        </ul>
+      </div>
+
+      <!-- Top States -->
+      <div>
+        <h4 class="font-playfair font-bold text-lg mb-5">Top States</h4>
+        <ul class="space-y-3 text-sm text-white/60">
+          <li><a href="#" class="hover:text-saffron transition-colors">🏰 Rajasthan</a></li>
+          <li><a href="#" class="hover:text-saffron transition-colors">🌴 Kerala</a></li>
+          <li><a href="#" class="hover:text-saffron transition-colors">🏖️ Goa</a></li>
+          <li><a href="#" class="hover:text-saffron transition-colors">🏔️ Himachal Pradesh</a></li>
+          <li><a href="#" class="hover:text-saffron transition-colors">🕉️ Uttar Pradesh</a></li>
+          <li><a href="#" class="hover:text-saffron transition-colors">🌿 Meghalaya</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact + Newsletter -->
+      <div>
+        <h4 class="font-playfair font-bold text-lg mb-5">Get in Touch</h4>
+        <ul class="space-y-3 text-sm text-white/60 mb-6">
+          <li class="flex items-start gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-saffron flex-shrink-0 mt-0.5"></i>Tourism House, Parliament Street, New Delhi — 110001</li>
+          <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-saffron flex-shrink-0"></i>+91 1800-111-INDIA</li>
+          <li class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-saffron flex-shrink-0"></i>explore@bharatdarshan.in</li>
+        </ul>
+
+        <p class="font-semibold text-sm mb-2">Get Travel Guides</p>
+        <div class="flex gap-2">
+          <input type="email" placeholder="your@email.com" class="flex-1 bg-white/10 border border-white/20 rounded-xl px-3 py-2.5 text-white text-xs placeholder-white/40 outline-none focus:border-saffron transition-colors" />
+          <button class="bg-saffron hover:bg-saffron-dark text-white rounded-xl px-4 py-2.5 text-xs font-semibold transition-colors">Subscribe</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/40">
+      <div class="flex items-center gap-3">
+        <span class="font-playfair text-white/60 font-semibold">Incredible India</span>
+        <span>·</span>
+        <span>Ministry of Tourism · Government of India</span>
+      </div>
+
+      <!-- Payment badges -->
+      <div class="flex items-center gap-3 text-xs bg-white/5 px-4 py-2 rounded-full">
+        <span>💳 Visa</span>
+        <span>💳 Mastercard</span>
+        <span>📱 UPI</span>
+        <span>🏦 NetBanking</span>
+      </div>
+
+      <p>© 2026 Bharat Darshan. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  /* =============================================
+     DESTINATION DATA
+  ============================================= */
+  const destinations = {
+    rajasthan: {
+      name: 'Rajasthan',
+      tagline: 'Land of Kings',
+      img: 'https://source.unsplash.com/1200x600/?rajasthan,palace',
+      bestTime: 'October to March',
+      region: 'North India',
+      highlights: ['Jaipur — The Pink City', 'Udaipur — City of Lakes', 'Jaisalmer — Golden Fort'],
+      itinerary: [
+        { day: 'Day 1', title: 'Jaipur — The Pink City', desc: 'Explore Amber Fort, Hawa Mahal, and Jantar Mantar. Evening at local bazaars for block-print textiles and lac bangles.' },
+        { day: 'Day 2', title: 'Udaipur — City of Lakes', desc: 'Boat ride on Lake Pichola, visit City Palace, stroll Fateh Sagar. Sunset dinner at a rooftop haveli.' },
+        { day: 'Day 3', title: 'Jaisalmer — Desert Kingdom', desc: 'Jaisalmer Fort exploration, Sam Sand Dunes sunset camel safari, traditional Rajasthani folk performance.' },
+      ],
+      color: '#E8A35B',
+    },
+    kerala: {
+      name: 'Kerala',
+      tagline: "God's Own Country",
+      img: 'https://source.unsplash.com/1200x600/?kerala,backwaters',
+      bestTime: 'September to March',
+      region: 'South India',
+      highlights: ['Alleppey — Backwater Houseboat', 'Munnar — Tea Gardens', 'Kovalam — Beach & Ayurveda'],
+      itinerary: [
+        { day: 'Day 1', title: 'Arrive Kochi', desc: 'Explore Fort Kochi\'s colonial streets, Chinese fishing nets, and spice markets. Evening Kathakali dance performance.' },
+        { day: 'Day 2', title: 'Alleppey Backwaters', desc: 'Board a traditional kettuvallam houseboat through coconut-lined canals. Watch local life unfold on the water.' },
+        { day: 'Day 3', title: 'Munnar Tea Highlands', desc: 'Drive through emerald tea estates to Munnar. Eravikulam National Park, Mattupetty Dam, and Kerala Ayurveda massage.' },
+      ],
+      color: '#4CAF6A',
+    },
+    goa: {
+      name: 'Goa',
+      tagline: 'Pearl of the Orient',
+      img: 'https://source.unsplash.com/1200x600/?goa,beach',
+      bestTime: 'November to February',
+      region: 'West India',
+      highlights: ['Baga & Calangute — North Goa', 'Panjim — Old Latin Quarter', 'Dudhsagar — Waterfall Trek'],
+      itinerary: [
+        { day: 'Day 1', title: 'North Goa Beaches', desc: 'Morning at Calangute beach, afternoon visit Aguada Fort and Chapora Fort. Sunset at Anjuna flea market.' },
+        { day: 'Day 2', title: 'Old Goa — Heritage Trail', desc: 'Basilica of Bom Jesus (UNESCO), Se Cathedral, Fontainhas Latin Quarter. Evening river cruise on Mandovi.' },
+        { day: 'Day 3', title: 'South Goa & Dudhsagar', desc: 'Serene Palolem Beach, jeep safari to Dudhsagar Falls, Spice plantation tour with Goan lunch.' },
+      ],
+      color: '#60A8E0',
+    },
+    himachal: {
+      name: 'Himachal Pradesh',
+      tagline: 'Dev Bhoomi',
+      img: 'https://source.unsplash.com/1200x600/?himachal,mountains',
+      bestTime: 'March–June, September–November',
+      region: 'North India',
+      highlights: ['Manali — Adventure Capital', 'Spiti Valley — Moonscape', 'Dharamshala — Tibetan Culture'],
+      itinerary: [
+        { day: 'Day 1', title: 'Shimla — Colonial Hill Station', desc: 'Mall Road, Christ Church, Jakhu Temple. Heritage toy train ride from Kalka to Shimla (UNESCO).' },
+        { day: 'Day 2', title: 'Manali — Adventure Base', desc: 'Hadimba Devi Temple, Solang Valley snow sports, Rohtang Pass (seasonal), old Manali town.' },
+        { day: 'Day 3', title: 'Spiti Valley — Off the Grid', desc: 'Key Monastery perched on cliffs, Kibber village, Pin Valley National Park with snow leopard territory.' },
+      ],
+      color: '#5BA3E0',
+    },
+    varanasi: {
+      name: 'Varanasi',
+      tagline: 'Spiritual Capital of India',
+      img: 'https://source.unsplash.com/1200x600/?varanasi,ganges',
+      bestTime: 'October to February',
+      region: 'North India',
+      highlights: ['Dashashwamedh Ghat — Evening Aarti', 'Sarnath — Buddhist Circuit', 'Vishwanath Temple'],
+      itinerary: [
+        { day: 'Day 1', title: 'The Ghats at Dawn', desc: 'Pre-dawn boat ride on the Ganges, watch burning ghats, witness morning rituals. Explore silk weaving lanes of Varanasi.' },
+        { day: 'Day 2', title: 'Ganga Aarti — Divine Evening', desc: 'Kashi Vishwanath Temple (Jyotirlinga), Annapurna Temple. Evening: grand Dashashwamedh Ghat Aarti ceremony.' },
+        { day: 'Day 3', title: 'Sarnath — Buddha\'s First Sermon', desc: 'Dhamek Stupa, Sarnath Museum, Tibetan Monastery. Evening boat ride under Varanasi\'s glowing skyline.' },
+      ],
+      color: '#D4AF37',
+    },
+    meghalaya: {
+      name: 'Meghalaya',
+      tagline: 'Abode of Clouds',
+      img: 'https://source.unsplash.com/1200x600/?meghalaya,waterfall',
+      bestTime: 'October to May',
+      region: 'Northeast India',
+      highlights: ['Cherrapunji — Wettest Place on Earth', 'Living Root Bridges', 'Dawki — Crystal River'],
+      itinerary: [
+        { day: 'Day 1', title: 'Shillong — Scotland of the East', desc: 'Ward\'s Lake, Don Bosco Museum of Northeast cultures, Police Bazaar. Evening at Shillong Peak viewpoint.' },
+        { day: 'Day 2', title: 'Cherrapunji — Land of Waterfalls', desc: 'Nohkalikai Falls (India\'s tallest), Mawsmai Cave, Seven Sisters Falls. Trek to living root bridge of Tyrna.' },
+        { day: 'Day 3', title: 'Dawki — Glass River', desc: 'Boat ride on crystal-clear Umngot River (visibility to riverbed), Mawlynnong (cleanest village in Asia).' },
+      ],
+      color: '#9B59B6',
+    },
+  };
+
+  /* =============================================
+     NAVBAR — scroll behavior
+  ============================================= */
+  const navbar = document.getElementById('navbar');
+  const navLogoText = document.querySelector('.nav-logo-text');
+  const navSubText = document.querySelector('.nav-sub-text');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+      navbar.classList.remove('py-4');
+      navLogoText.classList.remove('text-white');
+      navLogoText.classList.add('text-navy');
+      navSubText.classList.remove('text-white/70');
+      navSubText.classList.add('text-gray-500');
+      navLinks.forEach(l => { l.classList.remove('text-white/90'); l.classList.add('text-navy'); });
+    } else {
+      navbar.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+      navbar.classList.add('py-4');
+      navLogoText.classList.add('text-white');
+      navLogoText.classList.remove('text-navy');
+      navSubText.classList.add('text-white/70');
+      navSubText.classList.remove('text-gray-500');
+      navLinks.forEach(l => { l.classList.add('text-white/90'); l.classList.remove('text-navy'); });
+    }
+  });
+
+  /* =============================================
+     MOBILE MENU
+  ============================================= */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const closeMenu = document.getElementById('close-menu');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+  function openMobileMenu() {
+    mobileMenu.classList.remove('hidden');
+    mobileMenu.classList.add('flex');
+    document.body.classList.add('menu-open');
+  }
+  function closeMobileMenu() {
+    mobileMenu.classList.add('hidden');
+    mobileMenu.classList.remove('flex');
+    document.body.classList.remove('menu-open');
+  }
+
+  hamburger.addEventListener('click', openMobileMenu);
+  closeMenu.addEventListener('click', closeMobileMenu);
+  mobileNavLinks.forEach(link => link.addEventListener('click', closeMobileMenu));
+
+  /* =============================================
+     HERO SLIDER
+  ============================================= */
+  const heroSlides = document.querySelectorAll('.hero-slide');
+  const heroDots = document.querySelectorAll('.hero-dot');
+  let currentSlide = 0;
+  let heroTimer;
+
+  function goToSlide(n) {
+    heroSlides[currentSlide].classList.remove('active');
+    heroDots[currentSlide].classList.remove('active-dot', 'bg-saffron', 'w-6');
+    currentSlide = (n + heroSlides.length) % heroSlides.length;
+    heroSlides[currentSlide].classList.add('active');
+    heroDots[currentSlide].classList.add('active-dot', 'bg-saffron', 'w-6');
+  }
+
+  function startHeroSlider() {
+    heroTimer = setInterval(() => goToSlide(currentSlide + 1), 5000);
+  }
+
+  heroDots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { clearInterval(heroTimer); goToSlide(i); startHeroSlider(); });
+  });
+
+  // Init first dot
+  heroDots[0].classList.add('active-dot', 'bg-saffron', 'w-6');
+  startHeroSlider();
+
+  /* =============================================
+     DESTINATION FILTER
+  ============================================= */
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const destCards = document.querySelectorAll('.dest-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('active-filter', 'bg-saffron', 'text-white');
+        b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+      });
+      btn.classList.add('active-filter', 'bg-saffron', 'text-white');
+      btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+
+      const filter = btn.dataset.filter;
+      destCards.forEach(card => {
+        if (filter === 'all' || card.dataset.region === filter) {
+          card.classList.add('show');
+        } else {
+          card.classList.remove('show');
+        }
+      });
+    });
+  });
+
+  /* =============================================
+     DESTINATION MODAL
+  ============================================= */
+  const modal = document.getElementById('dest-modal');
+  const modalContent = document.getElementById('modal-content');
+  const closeModalBtn = document.getElementById('close-modal');
+
+  function openModal(destKey) {
+    const d = destinations[destKey];
+    if (!d) return;
+
+    modalContent.innerHTML = `
+      <div class="relative">
+        <img src="${d.img}" alt="${d.name}" class="w-full h-72 object-cover rounded-t-3xl" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-t-3xl"></div>
+        <div class="absolute bottom-0 left-0 p-6 text-white">
+          <span class="text-xs font-bold uppercase tracking-wider bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full mb-2 inline-block">${d.region}</span>
+          <h2 class="font-playfair font-black text-4xl">${d.name}</h2>
+          <p class="text-white/80 text-lg italic">${d.tagline}</p>
+        </div>
+      </div>
+      <div class="p-8">
+        <div class="flex flex-wrap gap-3 mb-8">
+          ${d.highlights.map(h => `<span class="bg-sand/80 text-navy text-sm px-4 py-2 rounded-full font-medium">📍 ${h}</span>`).join('')}
+          <span class="bg-saffron/10 text-saffron text-sm px-4 py-2 rounded-full font-medium">🗓️ Best: ${d.bestTime}</span>
+        </div>
+
+        <h3 class="font-playfair font-bold text-2xl text-navy mb-5">Suggested 3-Day Itinerary</h3>
+        <div class="space-y-5">
+          ${d.itinerary.map((item, i) => `
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-16 h-16 rounded-xl flex flex-col items-center justify-center text-white text-xs font-bold" style="background: linear-gradient(135deg, #FF9933, #e6851a);">
+                <span class="text-lg font-black">${i + 1}</span>
+                <span>Day</span>
+              </div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-navy mb-1">${item.title}</h4>
+                <p class="text-gray-500 text-sm leading-relaxed">${item.desc}</p>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="mt-8 flex gap-3 flex-wrap">
+          <a href="#plan-trip" class="bg-saffron text-white px-6 py-3 rounded-full font-semibold text-sm hover:bg-saffron-dark transition-all" onclick="closeModal()">Plan This Trip</a>
+          <button onclick="closeModal()" class="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-full font-semibold text-sm hover:border-saffron hover:text-saffron transition-all">Close</button>
+        </div>
+      </div>
+    `;
+
+    modal.classList.add('open');
+    lucide.createIcons();
+    document.body.style.overflow = 'hidden';
+    // Trap focus
+    setTimeout(() => closeModalBtn.focus(), 100);
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeModalBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Attach click to destination cards
+  destCards.forEach(card => {
+    const destKey = card.dataset.dest;
+    if (destKey) {
+      card.addEventListener('click', () => openModal(destKey));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(destKey); });
+    }
+  });
+
+  /* =============================================
+     INDIA MAP — State interactions
+  ============================================= */
+  const statePaths = document.querySelectorAll('.state-path');
+  const mapTooltip = document.getElementById('map-tooltip');
+  const tooltipState = document.getElementById('tooltip-state');
+  const tooltipAttr = document.getElementById('tooltip-attr');
+  const indiaSvg = document.getElementById('india-svg');
+
+  statePaths.forEach(path => {
+    path.setAttribute('tabindex', '0');
+    path.setAttribute('role', 'button');
+    path.setAttribute('aria-label', path.dataset.state);
+
+    path.addEventListener('mouseenter', e => {
+      tooltipState.textContent = path.dataset.state;
+      tooltipAttr.textContent = path.dataset.attr;
+      mapTooltip.classList.remove('hidden');
+    });
+
+    path.addEventListener('mousemove', e => {
+      const svgRect = indiaSvg.getBoundingClientRect();
+      const x = e.clientX - svgRect.left;
+      const y = e.clientY - svgRect.top;
+      mapTooltip.style.left = (x + 12) + 'px';
+      mapTooltip.style.top = (y - 10) + 'px';
+    });
+
+    path.addEventListener('mouseleave', () => {
+      mapTooltip.classList.add('hidden');
+    });
+
+    path.addEventListener('click', () => {
+      const destKey = path.dataset.dest;
+      if (destKey) {
+        const card = document.querySelector(`[data-dest="${destKey}"]`);
+        if (card) {
+          // Activate "all" filter first
+          const allBtn = document.querySelector('[data-filter="all"]');
+          if (allBtn) allBtn.click();
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.style.outline = '3px solid #FF9933';
+          setTimeout(() => { card.style.outline = ''; }, 2000);
+        }
+      }
+    });
+
+    path.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { path.click(); }
+    });
+  });
+
+  // Map legend items
+  document.querySelectorAll('.map-legend-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const destKey = item.dataset.dest;
+      if (destKey) openModal(destKey);
+    });
+  });
+
+  /* =============================================
+     FESTIVAL CAROUSEL
+  ============================================= */
+  const festTrack = document.getElementById('festival-track');
+  const festPrev = document.getElementById('fest-prev');
+  const festNext = document.getElementById('fest-next');
+  const CARD_WIDTH = 288 + 24; // w-72 + gap-6
+
+  festPrev.addEventListener('click', () => { festTrack.scrollBy({ left: -CARD_WIDTH, behavior: 'smooth' }); });
+  festNext.addEventListener('click', () => { festTrack.scrollBy({ left: CARD_WIDTH, behavior: 'smooth' }); });
+
+  /* =============================================
+     TESTIMONIALS CAROUSEL
+  ============================================= */
+  const testimonialsData = [
+    {
+      rating: 5,
+      quote: "The Ganga Aarti in Varanasi was the most spiritually moving experience of my life. Bharat Darshan's guidance made it unforgettable.",
+      name: "Sarah Mueller",
+      location: "🇩🇪 Munich, Germany",
+      img: "https://source.unsplash.com/100x100/?woman,portrait,germany",
+    },
+    {
+      rating: 5,
+      quote: "Rajasthan with Bharat Darshan was like stepping into a fairy tale. The heritage walks, camel safaris, and sunset over the dunes — pure magic.",
+      name: "James Whitfield",
+      location: "🇬🇧 London, United Kingdom",
+      img: "https://source.unsplash.com/100x100/?man,portrait",
+    },
+    {
+      rating: 5,
+      quote: "Kerala's backwaters gave me the peace I was searching for. The Ayurveda retreat was life-changing. Already planning my second India trip!",
+      name: "Yuki Tanaka",
+      location: "🇯🇵 Tokyo, Japan",
+      img: "https://source.unsplash.com/100x100/?woman,portrait,asia",
+    },
+  ];
+
+  const testWrapper = document.getElementById('testimonial-wrapper');
+  const testDotsContainer = document.getElementById('test-dots');
+  const testPrev = document.getElementById('test-prev');
+  const testNext = document.getElementById('test-next');
+  let currentTest = 0;
+  let testTimer;
+
+  function renderTestimonial(i) {
+    const t = testimonialsData[i];
+    const stars = Array(t.rating).fill('<i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>').join('');
+    testWrapper.innerHTML = `
+      <div class="bg-sand/60 rounded-2xl p-8">
+        <div class="flex gap-1 mb-4">${stars}</div>
+        <blockquote class="font-playfair text-xl text-navy leading-relaxed mb-6 italic">"${t.quote}"</blockquote>
+        <div class="flex items-center gap-4">
+          <img src="${t.img}" alt="${t.name}" loading="lazy" class="w-12 h-12 rounded-full object-cover border-2 border-saffron" />
+          <div>
+            <p class="font-semibold text-navy">${t.name}</p>
+            <p class="text-gray-500 text-sm">${t.location}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    lucide.createIcons();
+
+    // Update dots
+    testDotsContainer.querySelectorAll('.dot').forEach((d, idx) => {
+      d.classList.toggle('active', idx === i);
+      d.classList.toggle('bg-saffron', idx === i);
+      d.classList.toggle('bg-gray-300', idx !== i);
+    });
+  }
+
+  function goToTest(n) {
+    currentTest = (n + testimonialsData.length) % testimonialsData.length;
+    renderTestimonial(currentTest);
+  }
+
+  // Build dots
+  testimonialsData.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = `dot w-2 h-2 rounded-full ${i === 0 ? 'bg-saffron active' : 'bg-gray-300'}`;
+    dot.setAttribute('aria-label', `Testimonial ${i + 1}`);
+    dot.addEventListener('click', () => { clearInterval(testTimer); goToTest(i); startTestTimer(); });
+    testDotsContainer.appendChild(dot);
+  });
+
+  renderTestimonial(0);
+
+  testPrev.addEventListener('click', () => { clearInterval(testTimer); goToTest(currentTest - 1); startTestTimer(); });
+  testNext.addEventListener('click', () => { clearInterval(testTimer); goToTest(currentTest + 1); startTestTimer(); });
+
+  function startTestTimer() {
+    testTimer = setInterval(() => goToTest(currentTest + 1), 5000);
+  }
+
+  testWrapper.addEventListener('mouseenter', () => clearInterval(testTimer));
+  testWrapper.addEventListener('mouseleave', startTestTimer);
+  startTestTimer();
+
+  /* =============================================
+     ENQUIRY FORM
+  ============================================= */
+  const form = document.getElementById('enquiry-form');
+  const toast = document.getElementById('toast');
+
+  function showError(input, msg) {
+    const errEl = input.parentElement.querySelector('.error-msg');
+    if (errEl) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+    input.classList.add('border-red-400');
+    input.classList.remove('border-white/20');
+  }
+
+  function clearError(input) {
+    const errEl = input.parentElement.querySelector('.error-msg');
+    if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
+    input.classList.remove('border-red-400');
+    input.classList.add('border-white/20');
+  }
+
+  function showToast() {
+    toast.classList.remove('translate-y-24', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 4000);
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    let valid = true;
+
+    const name = document.getElementById('f-name');
+    const email = document.getElementById('f-email');
+    const phone = document.getElementById('f-phone');
+
+    clearError(name); clearError(email); clearError(phone);
+
+    if (!name.value.trim() || name.value.trim().length < 2) {
+      showError(name, 'Please enter your full name.'); valid = false;
+    }
+    if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+      showError(email, 'Please enter a valid email address.'); valid = false;
+    }
+    if (!phone.value.trim() || !/^\d{10}$/.test(phone.value.trim())) {
+      showError(phone, 'Please enter a valid 10-digit phone number.'); valid = false;
+    }
+
+    if (!valid) return;
+
+    // Save to localStorage
+    const enquiry = {
+      name: name.value.trim(),
+      email: email.value.trim(),
+      phone: phone.value.trim(),
+      date: document.getElementById('f-date').value,
+      interest: document.getElementById('f-interest').value,
+      submittedAt: new Date().toISOString(),
+    };
+    const existing = JSON.parse(localStorage.getItem('bharatDarshanEnquiries') || '[]');
+    existing.push(enquiry);
+    localStorage.setItem('bharatDarshanEnquiries', JSON.stringify(existing));
+
+    form.reset();
+    showToast();
+  });
+
+  /* =============================================
+     INTERSECTION OBSERVER — Reveal animations
+  ============================================= */
+  const revealEls = document.querySelectorAll('.reveal');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
+
+  // Re-init icons after any dynamic content
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

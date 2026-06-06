@@ -17,6 +17,10 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
+  <!-- Leaflet.js — Real India Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -67,10 +71,21 @@
     .scroll-x::-webkit-scrollbar { height: 4px; }
     .scroll-x::-webkit-scrollbar-track { background: #f1f1f1; }
     .scroll-x::-webkit-scrollbar-thumb { background: #FF9933; border-radius: 2px; }
-    /* State map hover */
-    .state-path { transition: fill 0.2s ease, filter 0.2s ease; cursor: pointer; }
-    .state-path:hover { filter: brightness(0.85) saturate(1.5); }
-    .state-path.active-state { fill: #FF9933 !important; }
+    /* Ken Burns auto-zoom for destination cards */
+    @keyframes kenburns {
+      0%   { transform: scale(1)    translate(0, 0); }
+      33%  { transform: scale(1.12) translate(-1.5%, -1%); }
+      66%  { transform: scale(1.1)  translate(1.5%, 0.5%); }
+      100% { transform: scale(1)    translate(0, 0); }
+    }
+    .card-img-zoom { animation: kenburns 10s ease-in-out infinite; transform-origin: center center; }
+    .dest-card:hover .card-img-zoom { animation-duration: 5s; }
+    /* Leaflet map overrides */
+    .leaflet-container { background: #000060 !important; outline: none; }
+    .leaflet-control-zoom a { border-color: rgba(255,255,255,0.2) !important; background: rgba(0,0,128,0.8) !important; color: #FF9933 !important; }
+    .leaflet-control-zoom a:hover { background: #FF9933 !important; color: #fff !important; }
+    .india-tooltip { background: white !important; border: none !important; border-radius: 12px !important; box-shadow: 0 8px 30px rgba(0,0,0,0.25) !important; padding: 8px 12px !important; }
+    .india-tooltip::before { display: none !important; }
     /* Carousel dots */
     .dot { transition: all 0.3s ease; }
     .dot.active { background: #FF9933; transform: scale(1.3); }
@@ -233,7 +248,7 @@
       <!-- Rajasthan -->
       <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="north" data-dest="rajasthan" role="button" tabindex="0" aria-label="Explore Rajasthan">
         <div class="relative overflow-hidden h-64">
-          <img src="https://source.unsplash.com/800x600/?rajasthan,palace" alt="Rajasthan Palace" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <img src="https://source.unsplash.com/800x600/?rajasthan,palace" alt="Rajasthan Palace" loading="lazy" class="w-full h-full object-cover card-img-zoom" style="animation-delay:0s;" />
           <div class="absolute top-4 left-4 bg-saffron text-white text-xs font-semibold px-3 py-1 rounded-full">North India</div>
           <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
             <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.9
@@ -253,7 +268,7 @@
       <!-- Kerala -->
       <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="south" data-dest="kerala" role="button" tabindex="0" aria-label="Explore Kerala">
         <div class="relative overflow-hidden h-64">
-          <img src="https://source.unsplash.com/800x600/?kerala,backwaters" alt="Kerala Backwaters" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <img src="https://source.unsplash.com/800x600/?kerala,backwaters" alt="Kerala Backwaters" loading="lazy" class="w-full h-full object-cover card-img-zoom" style="animation-delay:-2s;" />
           <div class="absolute top-4 left-4 bg-green-india text-white text-xs font-semibold px-3 py-1 rounded-full">South India</div>
           <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
             <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.8
@@ -273,7 +288,7 @@
       <!-- Goa -->
       <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="west" data-dest="goa" role="button" tabindex="0" aria-label="Explore Goa">
         <div class="relative overflow-hidden h-64">
-          <img src="https://source.unsplash.com/800x600/?goa,beach,india" alt="Goa Beach" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <img src="https://source.unsplash.com/800x600/?goa,beach,india" alt="Goa Beach" loading="lazy" class="w-full h-full object-cover card-img-zoom" style="animation-delay:-4s;" />
           <div class="absolute top-4 left-4 bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full">West India</div>
           <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
             <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.7
@@ -293,7 +308,7 @@
       <!-- Himachal Pradesh -->
       <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="north" data-dest="himachal" role="button" tabindex="0" aria-label="Explore Himachal Pradesh">
         <div class="relative overflow-hidden h-64">
-          <img src="https://source.unsplash.com/800x600/?himachal,mountains,india" alt="Himachal Pradesh Mountains" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <img src="https://source.unsplash.com/800x600/?himachal,mountains,india" alt="Himachal Pradesh Mountains" loading="lazy" class="w-full h-full object-cover card-img-zoom" style="animation-delay:-6s;" />
           <div class="absolute top-4 left-4 bg-saffron text-white text-xs font-semibold px-3 py-1 rounded-full">North India</div>
           <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
             <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.8
@@ -313,7 +328,7 @@
       <!-- Varanasi -->
       <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="north" data-dest="varanasi" role="button" tabindex="0" aria-label="Explore Varanasi">
         <div class="relative overflow-hidden h-64">
-          <img src="https://source.unsplash.com/800x600/?varanasi,ganges,india" alt="Varanasi Ghats" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <img src="https://source.unsplash.com/800x600/?varanasi,ganges,india" alt="Varanasi Ghats" loading="lazy" class="w-full h-full object-cover card-img-zoom" style="animation-delay:-8s;" />
           <div class="absolute top-4 left-4 bg-saffron text-white text-xs font-semibold px-3 py-1 rounded-full">North India</div>
           <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
             <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.9
@@ -333,7 +348,7 @@
       <!-- Meghalaya -->
       <div class="dest-card show reveal group rounded-2xl overflow-hidden shadow-xl bg-white hover:-translate-y-2 transition-all duration-300 cursor-pointer" data-region="northeast" data-dest="meghalaya" role="button" tabindex="0" aria-label="Explore Meghalaya">
         <div class="relative overflow-hidden h-64">
-          <img src="https://source.unsplash.com/800x600/?meghalaya,waterfall,northeast-india" alt="Meghalaya Waterfalls" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+          <img src="https://source.unsplash.com/800x600/?meghalaya,waterfall,northeast-india" alt="Meghalaya Waterfalls" loading="lazy" class="w-full h-full object-cover card-img-zoom" style="animation-delay:-3s;" />
           <div class="absolute top-4 left-4 bg-purple-600 text-white text-xs font-semibold px-3 py-1 rounded-full">Northeast India</div>
           <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
             <i data-lucide="star" class="w-3 h-3 fill-yellow-400 text-yellow-400"></i> 4.7
@@ -464,71 +479,9 @@
     </div>
 
     <div class="flex flex-col lg:flex-row items-center gap-12">
-      <!-- Map SVG -->
+      <!-- Leaflet Map -->
       <div class="w-full lg:w-1/2 reveal relative">
-        <div id="map-tooltip" class="hidden absolute z-20 bg-white rounded-xl shadow-2xl px-4 py-3 text-sm pointer-events-none min-w-48">
-          <p class="font-bold text-navy" id="tooltip-state">State Name</p>
-          <p class="text-gray-500 text-xs" id="tooltip-attr">Top attraction</p>
-        </div>
-        <!-- Simplified India SVG Map -->
-        <svg id="india-svg" viewBox="0 0 550 650" class="w-full max-w-lg mx-auto" role="img" aria-label="Interactive map of India" xmlns="http://www.w3.org/2000/svg">
-          <!-- Kashmir/J&K -->
-          <path class="state-path" data-state="Jammu & Kashmir" data-attr="Dal Lake & Gulmarg" fill="#4A90D9" d="M200,20 L240,15 L280,25 L290,60 L270,80 L240,75 L210,65 L195,45 Z" />
-          <!-- Himachal -->
-          <path class="state-path" data-state="Himachal Pradesh" data-attr="Manali & Spiti Valley" data-dest="himachal" fill="#5BA3E0" d="M240,75 L270,80 L285,95 L275,120 L250,125 L225,115 L215,95 L225,80 Z" />
-          <!-- Punjab -->
-          <path class="state-path" data-state="Punjab" data-attr="Golden Temple, Amritsar" fill="#7DB8E8" d="M195,90 L225,80 L225,115 L210,130 L185,125 L180,105 Z" />
-          <!-- Haryana -->
-          <path class="state-path" data-state="Haryana" data-attr="Kurukshetra & Sultanpur" fill="#6CAADE" d="M210,130 L250,125 L260,150 L240,165 L210,155 L200,140 Z" />
-          <!-- Delhi -->
-          <path class="state-path" data-state="Delhi" data-attr="Red Fort & Qutub Minar" fill="#FF9933" d="M235,148 L248,145 L252,158 L240,162 L232,155 Z" />
-          <!-- Rajasthan -->
-          <path class="state-path" data-state="Rajasthan" data-attr="Jaipur, Udaipur, Jaisalmer" data-dest="rajasthan" fill="#E8A35B" d="M145,125 L200,120 L210,155 L215,200 L200,250 L165,265 L130,255 L110,220 L115,175 L130,150 Z" />
-          <!-- UP -->
-          <path class="state-path" data-state="Uttar Pradesh" data-attr="Taj Mahal, Agra & Varanasi" data-dest="varanasi" fill="#C8A46A" d="M240,162 L290,155 L320,165 L330,195 L315,225 L285,235 L255,230 L230,215 L215,200 L210,165 Z" />
-          <!-- Bihar -->
-          <path class="state-path" data-state="Bihar" data-attr="Bodh Gaya & Nalanda" fill="#D4C17A" d="M320,165 L355,160 L370,185 L360,215 L330,225 L315,225 L320,190 Z" />
-          <!-- West Bengal -->
-          <path class="state-path" data-state="West Bengal" data-attr="Darjeeling & Kolkata" fill="#B5CE7A" d="M370,185 L395,175 L405,200 L400,240 L380,260 L360,255 L355,230 L360,215 Z" />
-          <!-- Jharkhand -->
-          <path class="state-path" data-state="Jharkhand" data-attr="Betla National Park" fill="#A8C270" d="M330,225 L360,215 L355,230 L360,255 L340,265 L315,255 L310,235 Z" />
-          <!-- Odisha -->
-          <path class="state-path" data-state="Odisha" data-attr="Konark Sun Temple" fill="#9CB870" d="M360,255 L380,260 L390,285 L380,315 L355,320 L335,305 L330,275 L340,265 Z" />
-          <!-- MP -->
-          <path class="state-path" data-state="Madhya Pradesh" data-attr="Khajuraho & Kanha Tiger Reserve" fill="#D4A85A" d="M215,200 L255,230 L285,235 L315,255 L330,275 L315,295 L285,300 L250,290 L225,270 L210,250 L200,250 Z" />
-          <!-- Gujarat -->
-          <path class="state-path" data-state="Gujarat" data-attr="Rann of Kutch & Gir Forest" fill="#E8BC6A" d="M120,255 L165,265 L200,250 L210,285 L200,310 L175,330 L145,325 L120,300 L105,275 Z" />
-          <!-- Maharashtra -->
-          <path class="state-path" data-state="Maharashtra" data-attr="Mumbai, Ajanta & Ellora" fill="#C89858" d="M175,330 L200,310 L250,290 L285,300 L295,330 L280,360 L255,375 L225,370 L200,350 L180,360 L170,345 Z" />
-          <!-- Chhattisgarh -->
-          <path class="state-path" data-state="Chhattisgarh" data-attr="Chitrakote Falls & Bastar" fill="#B8AA6A" d="M285,300 L315,295 L335,305 L330,330 L315,360 L295,365 L280,360 L295,330 Z" />
-          <!-- Goa -->
-          <path class="state-path" data-state="Goa" data-attr="Baga Beach & Old Goa Churches" data-dest="goa" fill="#60A8E0" d="M195,375 L210,368 L215,385 L205,395 L192,390 Z" />
-          <!-- Karnataka -->
-          <path class="state-path" data-state="Karnataka" data-attr="Hampi & Coorg" fill="#78B88A" d="M200,350 L225,370 L255,375 L270,400 L260,435 L240,450 L215,445 L198,420 L190,395 L205,375 Z" />
-          <!-- Andhra Pradesh -->
-          <path class="state-path" data-state="Andhra Pradesh" data-attr="Tirupati & Araku Valley" fill="#90C490" d="M260,435 L295,420 L320,435 L315,465 L295,480 L270,470 L260,455 Z" />
-          <!-- Telangana -->
-          <path class="state-path" data-state="Telangana" data-attr="Hyderabad Charminar" fill="#A8D4A0" d="M255,375 L280,360 L315,360 L320,390 L305,415 L295,420 L270,400 Z" />
-          <!-- Kerala -->
-          <path class="state-path" data-state="Kerala" data-attr="Alleppey Backwaters & Munnar" data-dest="kerala" fill="#4CAF6A" d="M215,445 L240,450 L248,475 L240,505 L225,515 L210,500 L205,470 L210,455 Z" />
-          <!-- Tamil Nadu -->
-          <path class="state-path" data-state="Tamil Nadu" data-attr="Madurai Meenakshi Temple" fill="#6ABE80" d="M240,450 L260,455 L295,480 L300,505 L285,525 L265,530 L248,515 L240,505 L248,475 Z" />
-          <!-- Assam -->
-          <path class="state-path" data-state="Assam" data-attr="Kaziranga & Kamakhya Temple" fill="#C0DD90" d="M405,175 L435,170 L445,185 L435,205 L415,215 L400,205 L400,190 Z" />
-          <!-- Meghalaya -->
-          <path class="state-path" data-state="Meghalaya" data-attr="Cherrapunji & Living Root Bridges" data-dest="meghalaya" fill="#A8D070" d="M400,205 L415,215 L410,230 L395,235 L385,225 L390,210 Z" />
-          <!-- Nagaland -->
-          <path class="state-path" data-state="Nagaland" data-attr="Hornbill Festival & Dzükou Valley" fill="#98C860" d="M435,185 L458,182 L465,200 L450,215 L435,205 L445,185 Z" />
-          <!-- Uttarakhand -->
-          <path class="state-path" data-state="Uttarakhand" data-attr="Haridwar, Rishikesh & Valley of Flowers" fill="#8FB8D8" d="M250,95 L285,95 L295,115 L285,135 L265,140 L250,125 Z" />
-          <!-- Lakshadweep label -->
-          <circle cx="195" cy="570" r="3" fill="#60A8E0" />
-          <circle cx="200" cy="580" r="2" fill="#60A8E0" />
-          <circle cx="188" cy="578" r="2" fill="#60A8E0" />
-          <!-- Sri Lanka outline hint -->
-          <ellipse cx="295" cy="555" rx="15" ry="20" fill="none" stroke="#ffffff30" stroke-width="1" />
-        </svg>
+        <div id="india-leaflet-map" class="rounded-2xl overflow-hidden" style="height: 520px;" role="img" aria-label="Interactive map of India showing all states"></div>
       </div>
 
       <!-- Map Legend & Info -->
@@ -1235,56 +1188,121 @@
   });
 
   /* =============================================
-     INDIA MAP — State interactions
+     INDIA MAP — Leaflet.js with real GeoJSON
   ============================================= */
-  const statePaths = document.querySelectorAll('.state-path');
-  const mapTooltip = document.getElementById('map-tooltip');
-  const tooltipState = document.getElementById('tooltip-state');
-  const tooltipAttr = document.getElementById('tooltip-attr');
-  const indiaSvg = document.getElementById('india-svg');
+  const stateAttrMap = {
+    'Rajasthan':                    { attr: 'Jaipur, Udaipur, Jaisalmer',           dest: 'rajasthan', color: '#E8A35B' },
+    'Kerala':                       { attr: 'Alleppey Backwaters & Munnar',          dest: 'kerala',    color: '#3DA85A' },
+    'Goa':                          { attr: 'Baga Beach & Old Goa Churches',         dest: 'goa',       color: '#4A9DE0' },
+    'Himachal Pradesh':             { attr: 'Manali & Spiti Valley',                 dest: 'himachal',  color: '#5598D8' },
+    'Uttar Pradesh':                { attr: 'Taj Mahal, Agra & Varanasi',            dest: 'varanasi',  color: '#C8A46A' },
+    'Meghalaya':                    { attr: 'Cherrapunji & Living Root Bridges',     dest: 'meghalaya', color: '#7ABE50' },
+    'Jammu & Kashmir':              { attr: 'Dal Lake & Gulmarg',             color: '#4A90D9' },
+    'Ladakh':                       { attr: 'Pangong Lake & Nubra Valley',    color: '#5580C0' },
+    'Punjab':                       { attr: 'Golden Temple, Amritsar',        color: '#7DB8E8' },
+    'Haryana':                      { attr: 'Kurukshetra & Sultanpur',        color: '#6CAADE' },
+    'NCT of Delhi':                 { attr: 'Red Fort & Qutub Minar',         color: '#FF9933' },
+    'Bihar':                        { attr: 'Bodh Gaya & Nalanda',            color: '#D4C17A' },
+    'West Bengal':                  { attr: 'Darjeeling & Kolkata',           color: '#B5CE7A' },
+    'Jharkhand':                    { attr: 'Betla National Park',            color: '#A8C270' },
+    'Odisha':                       { attr: 'Konark Sun Temple',              color: '#9CB870' },
+    'Madhya Pradesh':               { attr: 'Khajuraho & Kanha Tiger Reserve',color: '#D4A85A' },
+    'Gujarat':                      { attr: 'Rann of Kutch & Gir Forest',     color: '#E8BC6A' },
+    'Maharashtra':                  { attr: 'Mumbai, Ajanta & Ellora',        color: '#C89858' },
+    'Chhattisgarh':                 { attr: 'Chitrakote Falls & Bastar',      color: '#B8AA6A' },
+    'Karnataka':                    { attr: 'Hampi & Coorg',                  color: '#78B88A' },
+    'Andhra Pradesh':               { attr: 'Tirupati & Araku Valley',        color: '#90C490' },
+    'Telangana':                    { attr: 'Hyderabad Charminar',            color: '#A8D4A0' },
+    'Tamil Nadu':                   { attr: 'Madurai Meenakshi Temple',       color: '#6ABE80' },
+    'Assam':                        { attr: 'Kaziranga & Kamakhya Temple',    color: '#C0DD90' },
+    'Nagaland':                     { attr: 'Hornbill Festival & Dzükou Valley',color: '#98C860' },
+    'Uttarakhand':                  { attr: 'Haridwar, Rishikesh & Flowers Valley',color: '#8FB8D8' },
+    'Arunachal Pradesh':            { attr: 'Tawang Monastery',              color: '#B0C870' },
+    'Arunanchal Pradesh':           { attr: 'Tawang Monastery',              color: '#B0C870' },
+    'Manipur':                      { attr: 'Loktak Lake & Keibul Lamjao',   color: '#90C060' },
+    'Mizoram':                      { attr: 'Blue Mountain & Champhai',      color: '#80B050' },
+    'Tripura':                      { attr: 'Ujjayanta Palace & Neermahal',  color: '#98C870' },
+    'Sikkim':                       { attr: 'Gurudongmar Lake & Nathu La',   color: '#A8D890' },
+    'Andaman & Nicobar Island':     { attr: 'Radhanagar Beach & Cellular Jail',color: '#5BA8E8' },
+    'Lakshadweep':                  { attr: 'Bangaram & Agatti Islands',     color: '#60A8E0' },
+    'Puducherry':                   { attr: 'French Quarter & Auroville',    color: '#88C880' },
+    'Dadra & Nagar Haveli':         { attr: 'Dudhni Lake & Wildlife',        color: '#D8B870' },
+    'Daman & Diu':                  { attr: 'Diu Fort & Nagoa Beach',        color: '#D0A860' },
+  };
 
-  statePaths.forEach(path => {
-    path.setAttribute('tabindex', '0');
-    path.setAttribute('role', 'button');
-    path.setAttribute('aria-label', path.dataset.state);
-
-    path.addEventListener('mouseenter', e => {
-      tooltipState.textContent = path.dataset.state;
-      tooltipAttr.textContent = path.dataset.attr;
-      mapTooltip.classList.remove('hidden');
-    });
-
-    path.addEventListener('mousemove', e => {
-      const svgRect = indiaSvg.getBoundingClientRect();
-      const x = e.clientX - svgRect.left;
-      const y = e.clientY - svgRect.top;
-      mapTooltip.style.left = (x + 12) + 'px';
-      mapTooltip.style.top = (y - 10) + 'px';
-    });
-
-    path.addEventListener('mouseleave', () => {
-      mapTooltip.classList.add('hidden');
-    });
-
-    path.addEventListener('click', () => {
-      const destKey = path.dataset.dest;
-      if (destKey) {
-        const card = document.querySelector(`[data-dest="${destKey}"]`);
-        if (card) {
-          // Activate "all" filter first
-          const allBtn = document.querySelector('[data-filter="all"]');
-          if (allBtn) allBtn.click();
-          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          card.style.outline = '3px solid #FF9933';
-          setTimeout(() => { card.style.outline = ''; }, 2000);
-        }
-      }
-    });
-
-    path.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { path.click(); }
-    });
+  const leafletMap = L.map('india-leaflet-map', {
+    zoomControl: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    dragging: true,
+    attributionControl: false,
   });
+
+  L.control.zoom({ position: 'topright' }).addTo(leafletMap);
+
+  let geoLayer = null;
+  let activeLayer = null;
+
+  function scrollToDestCard(destKey) {
+    const card = document.querySelector(`.dest-card[data-dest="${destKey}"]`);
+    if (card) {
+      const allBtn = document.querySelector('[data-filter="all"]');
+      if (allBtn) allBtn.click();
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.style.outline = '3px solid #FF9933';
+      setTimeout(() => { card.style.outline = ''; }, 2000);
+    }
+  }
+
+  fetch('https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson')
+    .then(r => r.json())
+    .then(data => {
+      geoLayer = L.geoJSON(data, {
+        style: feature => {
+          const info = stateAttrMap[feature.properties.ST_NM] || {};
+          return {
+            fillColor: info.color || '#6B8EC4',
+            weight: 1,
+            opacity: 0.9,
+            color: 'rgba(255,255,255,0.35)',
+            fillOpacity: 0.8,
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const name = feature.properties.ST_NM;
+          const info = stateAttrMap[name] || {};
+
+          layer.bindTooltip(
+            `<div style="font-family:Poppins,sans-serif;min-width:140px;">
+               <p style="font-weight:700;color:#000080;font-size:13px;margin:0 0 3px">${name}</p>
+               <p style="color:#888;font-size:11px;margin:0;">📍 ${info.attr || 'Explore this state'}</p>
+               ${info.dest ? '<p style="color:#FF9933;font-size:10px;margin:3px 0 0;font-weight:600;">Click to explore →</p>' : ''}
+             </div>`,
+            { sticky: true, opacity: 1, className: 'india-tooltip' }
+          );
+
+          layer.on('mouseover', function() {
+            this.setStyle({ fillOpacity: 1, weight: 2, color: '#FF9933' });
+            this.bringToFront();
+          });
+          layer.on('mouseout', function() {
+            if (this !== activeLayer) geoLayer.resetStyle(this);
+          });
+          layer.on('click', function() {
+            if (activeLayer && activeLayer !== this) geoLayer.resetStyle(activeLayer);
+            this.setStyle({ fillColor: '#FF9933', fillOpacity: 1, weight: 2, color: '#fff' });
+            activeLayer = this;
+            if (info.dest) scrollToDestCard(info.dest);
+          });
+        },
+      }).addTo(leafletMap);
+
+      leafletMap.fitBounds(geoLayer.getBounds(), { padding: [8, 8] });
+    })
+    .catch(() => {
+      const el = document.getElementById('india-leaflet-map');
+      if (el) el.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:rgba(255,255,255,0.5);font-size:14px;font-family:Poppins,sans-serif;">Map temporarily unavailable</div>';
+    });
 
   // Map legend items
   document.querySelectorAll('.map-legend-item').forEach(item => {
